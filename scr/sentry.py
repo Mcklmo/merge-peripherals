@@ -76,18 +76,20 @@ class Sentry:
         Initializes an instance of Sentry.
         """
         self.modules = []
+        self.frequency = 0
 
-    def start_server(self):
+    def start_server(self, frequency=5):
         """
         Starts the server and all registered modules, continuously prints their data.
         """
+        self.frequency = 1/frequency
         for module in self.modules:
             module.start()
 
         while True:
             for module in self.modules:
                 print(module.data)
-            time.sleep(.2)
+            time.sleep(self.frequency)
 
     def register_module(self, name: str, start_method: Callable, start_attrs: Tuple[Any], callback: Callable, **defaults):
         """
