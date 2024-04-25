@@ -3,9 +3,9 @@ from modules.TacxTrainer.main import run as TacxStart, get as TacxGet
 
 sentry = Sentry()
 
-
-
 # Register your modules here!
+
+# this is the mocked bicycle home trainer
 sentry.register_module(
     "Tacx Trainer",
     TacxStart, 
