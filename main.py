@@ -34,4 +34,4 @@ sentry.register_module(
 # )
 
 
-sentry.start_server()
+sentry.start_server(10)
