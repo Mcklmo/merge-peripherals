@@ -25,6 +25,11 @@ class EModuleWrapper:
         self.callback = callback
         self.is_running = False
         self.data = defaults
+    
+    @property
+    def name_safe(self):
+        return self.name.lower().replace(" ", "_")
+
 
     def __call__(self) -> Any:
         """
@@ -77,18 +82,38 @@ class Sentry:
         """
         self.modules = []
         self.frequency = 0
+        self.ws_client = None
+    
+    def ws_spin_up_server(self):
+        print("Started ws server..")
+
+
+
+    def ws_send_payload(self, payload):
+        pass
+
+
+
 
     def start_server(self, frequency=5):
         """
         Starts the server and all registered modules, continuously prints their data.
         """
+
+        self.ws_spin_up_server()
+
         self.frequency = 1/frequency
         for module in self.modules:
             module.start()
 
         while True:
-            for module in self.modules:
-                print(module.data)
+            # concatenete data
+            payload_data = {module.name_safe+"__"+key:value for module in self.modules for key, value in module().items()}
+
+            print(payload_data)
+            
+            # send data
+            self.ws_send_payload(payload_data)
             time.sleep(self.frequency)
 
     def register_module(self, name: str, start_method: Callable, start_attrs: Tuple[Any], callback: Callable, **defaults):
