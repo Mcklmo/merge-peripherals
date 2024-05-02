@@ -28,7 +28,8 @@ CALIBRATION_DATA =  {
         'vrx_min': 1023,
         'vrx_max': 0,
         'vry_min': 1023,
-        'vry_max': 0
+        'vry_max': 0,
+        "pressed_thresshold": 500
     }
 
 # The normalize_value function
@@ -50,7 +51,7 @@ def get_joystick_output():
     vrx_pos_normalized = normalize_value(vrx_pos, CALIBRATION_DATA['vrx_min'], CALIBRATION_DATA['vrx_max'])
     vry_pos_normalized = normalize_value(vry_pos, CALIBRATION_DATA['vry_min'], CALIBRATION_DATA['vry_max'])
 
-    return {"x": vrx_pos_normalized, "y": vry_pos_normalized, "pressed": swt_val}
+    return {"x": vrx_pos_normalized, "y": vry_pos_normalized, "pressed": swt_val < CALIBRATION_DATA["pressed_thresshold"]}
 
 
 
