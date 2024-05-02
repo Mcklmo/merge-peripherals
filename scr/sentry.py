@@ -93,8 +93,9 @@ class Sentry:
             print(f"New connection from: {client}")
             
         try:
-            self.ws_server = WebsocketServer(host='127.0.0.1', port=13254, loglevel=logging.INFO)
+            self.ws_server = WebsocketServer(host='0.0.0.0', port=8081, loglevel=logging.INFO)
             self.ws_server.set_fn_new_client(new_client_alert)
+            threading.Thread(target=self.ws_server.run_forever, daemon=True).start()
         except Exception:
             print("Unable to start WS server..")
             sys.exit(-1)
@@ -124,8 +125,6 @@ class Sentry:
         while True:
             # concatenete data
             payload_data = {module.name_safe+"__"+key:value for module in self.modules for key, value in module().items()}
-
-            print(payload_data)
             
             # send data
             self.ws_send_payload(payload_data)

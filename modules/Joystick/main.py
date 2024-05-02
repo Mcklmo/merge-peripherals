@@ -39,7 +39,8 @@ def normalize_value(current, min_val, max_val):
         return 0  # default value
     # Scale the current value from 0 to 100
     normalized = (current - min_val) / (max_val - min_val) * 100
-    return normalized
+    
+    return max(0, min(100, normalized))
     
 
 
@@ -50,6 +51,9 @@ def get_joystick_output():
 
     vrx_pos_normalized = normalize_value(vrx_pos, CALIBRATION_DATA['vrx_min'], CALIBRATION_DATA['vrx_max'])
     vry_pos_normalized = normalize_value(vry_pos, CALIBRATION_DATA['vry_min'], CALIBRATION_DATA['vry_max'])
+
+    # patch
+    vrx_pos_normalized, vry_pos_normalized = vry_pos_normalized, vrx_pos_normalized
 
     return {"x": vrx_pos_normalized, "y": vry_pos_normalized, "pressed": swt_val < CALIBRATION_DATA["pressed_thresshold"]}
 
