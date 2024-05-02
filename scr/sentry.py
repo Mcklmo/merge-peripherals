@@ -4,6 +4,10 @@ import threading
 import traceback
 import inspect
 import asyncio
+import logging
+from websocket_server import WebsocketServer
+import sys
+import json
 
 UPDATE_FEQ = 5
 
@@ -82,15 +86,26 @@ class Sentry:
         """
         self.modules = []
         self.frequency = 0
-        self.ws_client = None
+        self.ws_server = None
     
     def ws_spin_up_server(self):
+        def new_client_alert(client, server):
+            print(f"New connection from: {client}")
+            
+        try:
+            self.ws_server = WebsocketServer(host='127.0.0.1', port=13254, loglevel=logging.INFO)
+            self.ws_server.set_fn_new_client(new_client_alert)
+        except Exception:
+            print("Unable to start WS server..")
+            sys.exit(-1)
+            
         print("Started ws server..")
 
 
 
-    def ws_send_payload(self, payload):
-        pass
+    def ws_send_payload(self, payload:dict):
+        self.ws_server.send_message_to_all(json.dumps(payload))
+        print(f"Send {payload}")
 
 
 

@@ -2,11 +2,8 @@ import pygame
 import sys
 
 import websocket
-import _thread
-import time
 import rel
 import json
-
 
 # Constants
 WIDTH = 800
