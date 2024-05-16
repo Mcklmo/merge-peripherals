@@ -4,9 +4,9 @@ from modules.Joystick.main import run as JoystickStart, get_joystick_output as J
 
 sentry = Sentry()
 
-
-
 # Register your modules here!
+
+# this is the mocked bicycle home trainer
 sentry.register_module(
     "Tacx Trainer",
     TacxStart, 
