@@ -1,1 +1,1 @@
-# merge-video-game-input-device-streams
+# merge-peripheral-output-streams
