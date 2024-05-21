@@ -61,6 +61,7 @@ def get_joystick_output():
 
 
 def run():
-      return True
+    return isinstance(readChannel(vrx_channel), int) and isinstance(readChannel(vry_channel), int) and isinstance(readChannel(swt_channel), int)
+
 
 	
