@@ -108,6 +108,7 @@ class Sentry:
         self.modules = []
         self.frequency = 0
         self.ws_server = None
+        self.should_stop = False
     
     def ws_spin_up_server(self):
         def new_client_alert(client, server):
@@ -151,7 +152,13 @@ class Sentry:
             self.ws_send_payload(payload_data)
             time.sleep(self.frequency)
             
-            self.benchmark.append({"type": "reading", "time": time.perf_counter(), "modules": len(self.modules), "package_size": sys.getsizeof(payload_data)})
+            self.benchmark.append({"type": "reading", "time": time.perf_counter(), "modules": len(self.modules), "package_size": sys.getsizeof(payload_data), "target_freq": self.frequency})
+    
+    def stop(self):
+        for m in self.modules:
+            m.should_stop = True
+            
+            
 
     def register_module(
         self,
