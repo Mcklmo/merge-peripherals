@@ -14,11 +14,13 @@ sentry = Sentry()
 
 def benchmark():
     time.sleep(5)
-    for i in range(1, 10**3, 100):
-        sentry.benchmark.append({"type": "system_reading", "cpu": psutil.cpu_percent(), "ram": psutil.virtual_memory().percent})
+    for i in range(1, 10000, 100):
+        cpu=psutil.cpu_percent()
+        ram=psutil.virtual_memory().percent
+        sentry.benchmark.append({"type": "system_reading", "cpu": cpu, "ram": ram})
         sentry.frequency = 1/i
-        print(f"Frequency is now: {i}")
-        time.sleep(1)
+        print(f"Frequency is now: {i}, cpu: {cpu}, ram: {ram}")
+        time.sleep(2)
 
     try:
         with open("./benchmark_results.json", "w") as f:
