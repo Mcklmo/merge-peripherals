@@ -1,6 +1,7 @@
+import os
 from scr.sentry import Sentry
 from modules.TacxTrainer.main import TestForBenchmarking
-from modules.Joystick.main import run as JoystickStart, get_joystick_output as JoystickGet
+# from modules.Joystick.main import run as JoystickStart, get_joystick_output as JoystickGet
 import time
 import json
 import psutil
@@ -13,15 +14,19 @@ sentry = Sentry()
 
 def benchmark():
     time.sleep(5)
-    for i in range(1, 1000*10, 100):
+    for i in range(1, 10**3, 100):
         sentry.benchmark.append({"type": "system_reading", "cpu": psutil.cpu_percent(), "ram": psutil.virtual_memory().percent})
         sentry.frequency = 1/i
         print(f"Frequency is now: {i}")
-        time.sleep(10)
+        time.sleep(1)
 
-
-    with open("./benchmark_results.json", "wb") as f:
-        json.dump(sentry.benchmark, f)
+    try:
+        with open("./benchmark_results.json", "w") as f:
+            json.dump(sentry.benchmark, f)
+    except Exception as e:
+        print(e)
+    
+    os._exit(0)
 
 # this is the mocked bicycle home trainer
 _ = TestForBenchmarking()
@@ -32,18 +37,6 @@ sentry.register_module(
     _.get,
     speed=0
 )
-
-sentry.register_module(
-    "JoyStick",
-    JoystickStart, 
-    (),
-    JoystickGet,
-    x=0,
-    y=0,
-    pressed=0
-)
-
-
 
 
 threading.Thread(target=benchmark, daemon=True).start()

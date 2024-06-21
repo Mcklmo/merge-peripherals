@@ -128,7 +128,7 @@ class Sentry:
 
     def ws_send_payload(self, payload:dict):
         self.ws_server.send_message_to_all(json.dumps(payload))
-        print(f"Send {payload}")
+        # print(f"Send {payload}")
 
 
 
