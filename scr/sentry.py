@@ -146,13 +146,15 @@ class Sentry:
 
         while True:
             # concatenete data
+            start_time=time.time()
             payload_data = {module.name_safe+"__"+key:value for module in self.modules for key, value in module().items()}
             
             # send data
             self.ws_send_payload(payload_data)
+            time_taken=time.time()-start_time
             time.sleep(self.frequency)
             
-            self.benchmark.append({"type": "reading", "time": time.perf_counter(), "modules": len(self.modules), "package_size": sys.getsizeof(payload_data), "target_freq": self.frequency})
+            self.benchmark.append({"type": "reading","cycle_time":time_taken, "time": time.perf_counter(), "modules": len(self.modules), "package_size": sys.getsizeof(payload_data), "target_freq": self.frequency})
     
     def stop(self):
         for m in self.modules:
