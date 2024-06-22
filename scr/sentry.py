@@ -115,7 +115,7 @@ class Sentry:
             print(f"New connection from: {client}")
             
         try:
-            self.ws_server = WebsocketServer(host='0.0.0.0', port=8081, loglevel=logging.INFO)
+            self.ws_server = WebsocketServer(host='0.0.0.0', port=8082, loglevel=logging.INFO)
             self.ws_server.set_fn_new_client(new_client_alert)
             threading.Thread(target=self.ws_server.run_forever, daemon=True).start()
         except Exception:
@@ -128,7 +128,7 @@ class Sentry:
 
     def ws_send_payload(self, payload:dict):
         self.ws_server.send_message_to_all(json.dumps(payload))
-        print(f"Send {payload}")
+        # print(f"Send {payload}")
 
 
 
@@ -146,17 +146,17 @@ class Sentry:
 
         while True:
             # concatenete data from self.modules
-            s = time.time_ns()
+            cycle_start_time = time.time_ns()
             payload_data = {module.name_safe+"__"+key:value for module in self.modules for key, value in module().items()}
             
             # send data
             self.ws_send_payload(payload_data)
             
-            time.sleep(self.frequency)
+            # time.sleep(self.frequency)
             
-            ct = time.time_ns()-s
+            cycle_time_total = time.time_ns()-cycle_start_time
             
-            self.benchmark.append({"type": "reading", "cycle_time": ct, "time": time.perf_counter(), 
+            self.benchmark.append({"type": "reading", "cycle_time": cycle_time_total, "time": time.perf_counter(), 
                 "modules": len(self.modules), "package_size": sys.getsizeof(payload_data), "target_freq": self.frequency})
     
     def stop(self):
