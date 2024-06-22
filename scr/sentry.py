@@ -128,7 +128,7 @@ class Sentry:
 
     def ws_send_payload(self, payload:dict):
         self.ws_server.send_message_to_all(json.dumps(payload))
-        # print(f"Send {payload}")
+        print(f"Send {payload}")
 
 
 
@@ -145,21 +145,25 @@ class Sentry:
             module.start()
 
         while True:
-            # concatenete data
-            start_time=time.time()
+            # concatenete data from self.modules
+            s = time.time_ns()
             payload_data = {module.name_safe+"__"+key:value for module in self.modules for key, value in module().items()}
             
             # send data
             self.ws_send_payload(payload_data)
-            time_taken=time.time()-start_time
+            
             time.sleep(self.frequency)
             
-            self.benchmark.append({"type": "reading","cycle_time":time_taken, "time": time.perf_counter(), "modules": len(self.modules), "package_size": sys.getsizeof(payload_data), "target_freq": self.frequency})
+            ct = time.time_ns()-s
+            
+            self.benchmark.append({"type": "reading", "cycle_time": ct, "time": time.perf_counter(), 
+                "modules": len(self.modules), "package_size": sys.getsizeof(payload_data), "target_freq": self.frequency})
     
     def stop(self):
         for m in self.modules:
             m.should_stop = True
             
+                
             
 
     def register_module(
