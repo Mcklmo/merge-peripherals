@@ -16,7 +16,7 @@ sentry = Sentry()
 
 def benchmark():
     # let the sentry store data...
-    time.sleep(30)
+    time.sleep(300)
 
     print("done...")
 
